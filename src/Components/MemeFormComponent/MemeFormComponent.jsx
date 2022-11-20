@@ -1,5 +1,4 @@
 import "/src/Components/MemeFormComponent/MemeFormComponent.css";
-import memesData from "../../memesData";
 import React from "react";
 
 const MemeFormComponent = () => {
@@ -8,7 +7,7 @@ const MemeFormComponent = () => {
     bottomText: "",
     randomImage: "http://i.imgflip.com/1bij.jpg",
   });
-  const [allMemeImages, setAllMemeImages] = React.useState(memesData);
+  const [allMemeImages, setAllMemeImages] = React.useState({});
   const getNewMemeImage = () => {
     let item =
       allMemeImages.data.memes[
@@ -20,12 +19,16 @@ const MemeFormComponent = () => {
   };
   const updateText = (event) => {
     const { name, value } = event.target;
-    console.log(name);
-    console.log(value);
     setMeme((prevMeme) => {
       return { ...prevMeme, [name]: value };
     });
   };
+  React.useEffect(() => {
+    console.log("component loaded");
+    fetch("https://api.imgflip.com/get_memes")
+      .then((res) => res.json())
+      .then((data) => setAllMemeImages(data));
+  }, []);
   return (
     <main>
       <section className="memeFormSection">
@@ -59,8 +62,8 @@ const MemeFormComponent = () => {
       </section>
       <section className="memeImageSection">
         <img src={meme.randomImage} className="memeImage" />
-        <span class="topText">{meme.topText}</span>
-        <span class="bottomText">{meme.bottomText}</span>
+        <span className="topText">{meme.topText}</span>
+        <span className="bottomText">{meme.bottomText}</span>
       </section>
     </main>
   );
